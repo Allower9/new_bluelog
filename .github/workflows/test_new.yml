@@ -1,6 +1,8 @@
 name: test
 
-on: pull_request
+on:
+  pull_request:  # Запускается при создании или обновлении pull request
+  workflow_dispatch: 
 
 jobs:
   test:
