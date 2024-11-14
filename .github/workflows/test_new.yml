@@ -42,21 +42,21 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: |
-          cd webapp  # Переход в директорию проекта, если ваш проект находится в папке webapp
+          
           poetry install --no-interaction --no-root
       #----------------------------------------------
       # Install your root project, if required
       #----------------------------------------------
       - name: Install project
         run: |
-          cd webapp  # Переход в директорию проекта
+          
           poetry install --no-interaction
       #----------------------------------------------
       #              Run test suite
       #----------------------------------------------
       - name: Run tests
         run: |
-          cd webapp  # Переход в директорию проекта
+         
           source .venv/bin/activate
           pytest tests/
           coverage report
