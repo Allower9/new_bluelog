@@ -1,0 +1,26 @@
+
+name: Deploy
+
+on: [push, workflow_dispatch]
+
+    
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+
+    
+    steps:
+
+    
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12' 
+      - run: python -m pip install python-dotenv
+      
+      - name: Run Python script2
+        run: python tests/test_basic.py
+      - name: Run Python script1
+        run: python wsgi.py
+  
