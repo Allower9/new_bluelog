@@ -10,52 +10,18 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      #----------------------------------------------
-      #       Проверка репозитория и настройка Python
-      #----------------------------------------------
       - name: Проверка репозитория
-        uses: actions/checkout@v3  # Обновлено до v3
+        uses: actions/checkout@v3
       - name: Настройка Python
         id: setup-python
-        uses: actions/setup-python@v4  # Обновлено до v4
+        uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-      #----------------------------------------------
-      #  -----  Установка и настройка Poetry  -----
-      #----------------------------------------------
-      - name: Установка Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          virtualenvs-path: .venv
-          installer-parallel: true
-
-      #----------------------------------------------
-      #       Загрузка кэшированной venv, если кэш существует
-      #----------------------------------------------
-      - name: Загрузка кэшированной venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3  # Обновлено до v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      #----------------------------------------------
-      # Установка зависимостей, если кэш не существует
-      #----------------------------------------------
-      - name: Установка зависимостей
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      - name: Установка Pipenv
+        run: pip install pipenv
+      - name: Установка зависимостей с помощью Pipenv
+        run: pipenv install --dev
+      - name: Запуск тестов
         run: |
-          # Вывод содержимого директории для отладки
-          ls -la /home/runner/work/new_bluelog/new_bluelog
-          poetry install --no-interaction --no-root
-        working-directory: /home/runner/work/new_bluelog/new_bluelog  # Укажите правильный путь, если необходимо
-      #----------------------------------------------
-      # Установка вашего корневого проекта, если требуется
-      #----------------------------------------------
-      - name: Установка проекта
-        run: |
-          poetry install --no-interaction
-        working-directory: /home/runner/work/new_bluelog/new_bluelog  # Укажите правильный путь, если необходимо
-      #----------------------------------------------
-      #             
+          pipenv run pytest tests/
+          pipenv run coverage report
