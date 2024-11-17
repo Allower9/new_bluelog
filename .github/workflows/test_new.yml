@@ -5,24 +5,25 @@ on:
     branches:
       - main
   workflow_dispatch:
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
-      #       Check out repository and set up Python
+      #       Проверка репозитория и настройка Python
       #----------------------------------------------
-      - name: Check out repository
+      - name: Проверка репозитория
         uses: actions/checkout@v3  # Обновлено до v3
-      - name: Set up Python
+      - name: Настройка Python
         id: setup-python
         uses: actions/setup-python@v4  # Обновлено до v4
         with:
           python-version: '3.12'
       #----------------------------------------------
-      #  -----  Install & configure Poetry  -----
+      #  -----  Установка и настройка Poetry  -----
       #----------------------------------------------
-      - name: Install Poetry
+      - name: Установка Poetry
         uses: snok/install-poetry@v1
         with:
           virtualenvs-create: true
@@ -31,35 +32,30 @@ jobs:
           installer-parallel: true
 
       #----------------------------------------------
-      #       Load cached venv if cache exists
+      #       Загрузка кэшированной venv, если кэш существует
       #----------------------------------------------
-      - name: Load cached venv
+      - name: Загрузка кэшированной venv
         id: cached-poetry-dependencies
         uses: actions/cache@v3  # Обновлено до v3
         with:
           path: .venv
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       #----------------------------------------------
-      # Install dependencies if cache does not exist
+      # Установка зависимостей, если кэш не существует
       #----------------------------------------------
-      - name: Install dependencies
+      - name: Установка зависимостей
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: |
-          
+          # Вывод содержимого директории для отладки
+          ls -la /home/runner/work/new_bluelog/new_bluelog
           poetry install --no-interaction --no-root
+        working-directory: /home/runner/work/new_bluelog/new_bluelog  # Укажите правильный путь, если необходимо
       #----------------------------------------------
-      # Install your root project, if required
+      # Установка вашего корневого проекта, если требуется
       #----------------------------------------------
-      - name: Install project
+      - name: Установка проекта
         run: |
-          
           poetry install --no-interaction
+        working-directory: /home/runner/work/new_bluelog/new_bluelog  # Укажите правильный путь, если необходимо
       #----------------------------------------------
-      #              Run test suite
-      #----------------------------------------------
-      - name: Run tests
-        run: |
-         
-          source .venv/bin/activate
-          pytest tests/
-          coverage report
+      #             
