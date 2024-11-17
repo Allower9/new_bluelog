@@ -34,6 +34,16 @@ jobs:
         run: |
           pipenv install --dev || { echo 'Pipenv install failed'; exit 1; }
 
+      # Проверка состояния Pipfile.lock
+      - name: Check Pipfile.lock
+        run: |
+          if [ -f Pipfile.lock ]; then
+            echo "Pipfile.lock exists."
+          else
+            echo "Pipfile.lock does not exist."
+            exit 1
+          fi
+
       # Запуск тестов
       - name: Run Tests
         run: |
