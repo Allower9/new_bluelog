@@ -32,7 +32,10 @@ jobs:
       # Установка зависимостей с помощью Pipenv
       - name: Install Dependencies
         run: |
-          pipenv install --dev || { echo 'Pipenv install failed'; exit 1; }
+          pipenv install --dev
+          if [ $? -ne 0 ]; then
+            echo 'Pipenv install failed'; exit 1;
+          fi
 
       # Проверка состояния Pipfile.lock
       - name: Check Pipfile.lock
